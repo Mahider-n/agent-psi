@@ -97,36 +97,19 @@
 (= (update-rule $ruleId $result $space) (
     let* (
         (($strength $confidence) (get-stv $ruleId $space))
-        ($_ (println! ("Current STV: " ($strength $confidence))))
+        ; ($_ (println! ("Current STV: " ($strength $confidence))))
         (($alpha $beta) (stv-to-beta ($strength $confidence)))
-        ($_ (println! ("Current alpha: " $alpha ", beta: " $beta)))
+        ; ($_ (println! ("Current alpha: " $alpha ", beta: " $beta)))
         ($newAlpha (if (== $result 1) (+ $alpha 1) $alpha))
-        ($_ (println! ("New alpha: " $newAlpha)))
+        ; ($_ (println! ("New alpha: " $newAlpha)))
         ($newBeta (if (== $result 1) $beta (+ $beta 1)))
-        ($_ (println! ("New beta: " $newBeta)))
+        ; ($_ (println! ("New beta: " $newBeta)))
         (($newStrength $newConfidence) (beta-to-stv ($newAlpha $newBeta)))
-        ($_ (println! ("New strength: " $newStrength)))
-        ($_ (println! ("New confidence: " $newConfidence)))
+        ; ($_ (println! ("New strength: " $newStrength)))
+        ; ($_ (println! ("New confidence: " $newConfidence)))
         ($_ (update-stv $ruleId ($newStrength $newConfidence) $space))
     ) ()
 ))
-
-(: Rule 1
-    (TTV 0)
-    (STV 0.7 0.1) 
-    (Complexity 1)
-    (Context ((Position LONG_RANGE)))
-    (Action (ATTACK SWORD))
-    (Goal (HIT))   ; high success
-)
-(: Rule 2
-    (TTV 0)
-    (STV 0.5 0.1) 
-    (Complexity 1)
-    (Context ((Position CLOSE_RANGE)))
-    (Action (ATTACK BOW))
-    (Goal (HIT))  ; low success
-)
 
 ; !(let $x (intersection-atom ((Position CLOSE_RANGE)) ((Position CLOSE_RANGE))) $x)
 ; !(match-goal (HIT) &self)
