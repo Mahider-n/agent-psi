@@ -100,7 +100,7 @@
         Empty
 ))
 
-; !(extractRuleAction (: Rule 1
+; !(extractRuleGoal (: Rule 1
 ;         (TTV 0)
 ;         (STV 0.5 0.002)  
 ;         (Complexity 1)

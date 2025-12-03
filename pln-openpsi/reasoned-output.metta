@@ -26,3 +26,5 @@
         (Goal (STV 0.2 0.1) (AND 
         (RIGHT_SQUARE (STV 0.2 0.1)) (STILL_ALIVE (STV 0.2 0.1)))
     )))
+
+(: Rule 200 (TTV 1) (STV 0.25 0.002) (Complexity 1) (IMPLICATION (AND ((LEFT_SQUARE (STV 0.2 0.1)) (STILL_ALIVE (STV 0.2 0.1))) (Action (SEQ_AND (MOVE_RIGHT)))) (Goal (STV 0.2 0.1) (AND ((CENTER_SQUARE (STV 0.2 0.1)) (STILL_ALIVE (STV 0.2 0.1))) ((CENTER_SQUARE (STV 0.2 0.1)) (DEAD (STV 0.2 0.1)))))))
