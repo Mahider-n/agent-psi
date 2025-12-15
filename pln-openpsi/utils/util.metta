@@ -21,8 +21,8 @@
     ) (sum $count)
 ))
 
-(= (areSimilar $listOne $listTwo) (
-    if (not (== (size-atom $listOne) (size-atom $listTwo)))
+(= (areSimilar $listOne $listTwo) 
+    (if (not (== (size-atom $listOne) (size-atom $listTwo)))
         False
         (if (== (size-atom $listOne) (countSimilar $listOne $listTwo))
             True 
@@ -41,3 +41,11 @@
         $num1
         $num2
 ))
+
+(: div (-> Number Number Number))
+(= (div $num $denom) (
+    (py-atom operator.truediv) $num $denom
+))
+
+(: round (-> Number Number Number))
+(= (round $num $sig) ((py-atom round) $num $sig))
