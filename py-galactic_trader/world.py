@@ -34,9 +34,6 @@ def is_valid_rule(rule, state):
         item_price = get_price(rule_context['planet'], item)
         if state.money < item_price:
             return False
-        # Prevent from double buying
-        # if state.context.get('item', None):
-        #     return False
     
     elif rule_action == "travel":
         travel_cost = get_travel_cost(rule_context['planet'], rule.goal['planet'])
