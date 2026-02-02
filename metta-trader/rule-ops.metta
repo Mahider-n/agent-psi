@@ -39,7 +39,7 @@
 ))
 
 (= (extractRuleContextValues $rule) (
-    let $contexts (extractRuleContext $rule) (map-atom $contexts $context (car-atom $context))
+    let $contexts (extractRuleContext $rule) (map-atom $contexts $context ((index-atom $context 0) (index-atom $context 1)))
 ))
 
 (= (extractRuleAction $rule) (
@@ -55,7 +55,7 @@
 ))
 
 (= (extractRuleGoalValues $rule) (
-    let $goals (extractRuleGoal $rule) (map-atom $goals $goal (car-atom $goal))
+    let $goals (extractRuleGoal $rule) (map-atom $goals $goal ((index-atom $goal 0) (index-atom $goal 1)))
 ))
 
 (= (extractRuleSTV $rule) (

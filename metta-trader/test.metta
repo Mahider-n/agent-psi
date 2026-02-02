@@ -1,3 +1,79 @@
+!(import! &self rule-ops)
+;; Travel Info
+(TRAVEL_COST A B 1)
+(TRAVEL_COST A C 1)
+(TRAVEL_COST B A 1)
+(TRAVEL_COST B C 1)
+(TRAVEL_COST C A 1)
+(TRAVEL_COST C B 1)
+
+
+(FOOD A 8)
+(FOOD B 20)
+(FOOD C 18)
+
+(METAL A 15)
+(METAL B 8)
+(METAL C 22)
+
+(FUEL A 25)
+(FUEL B 18)
+(FUEL C 5)
+
+(AVG_PRICE FOOD 15)
+(AVG_PRICE METAL 15)
+(AVG_PRICE FUEL 16)
+
+;; Helper Functions
+(= (getTravelCost $source $destination) (
+    match &self (TRAVEL_COST $source $destination $cost) $cost
+))
+
+(= (getFoodCost $planet) (
+    match &self (FOOD $planet $cost) $cost
+))
+
+(= (getMetalCost $planet) (
+    match &self (METAL $planet $cost) $cost
+))
+
+(= (getFuelCost $planet) (
+    match &self (FUEL $planet $cost) $cost
+))
+
+(= (getItemPrice $item $planet) (
+    match &self ($item $planet $price) $price
+))
+
+(= (getAvgPrice $item) (
+    match &self (AVG_PRICE $item $price) $price
+))
+
+(= (getItem $contexts) (
+    if (== $contexts ())
+        ()
+        (let* (
+            (($head $tail) (decons-atom $contexts))
+            ($contextType (index-atom $head 0))
+            ($itemName (index-atom $head 1))
+        ) (if (== $contextType HAS)
+            $itemName
+            (getItem $tail)
+        ))
+))
+
+!(getItem ((HAS FOOD STV) (PLANET A STV) (HAS METAL STV)))
+
+(= (evaluateState $contexts $money) (
+    let* (
+        ($item (getItem $contexts))
+        ($itemValue (getAvgPrice $item))
+    ) (+ $itemValue $money)
+))
+
+!(evaluateState ((HAS FOOD STV) (PLANET A STV)) 10)
+
+
 (= (getPlanetFromContexts $contexts) (
     let* (
         (($head $tail) (decons-atom $contexts))
@@ -8,6 +84,8 @@
         (getPlanetFromContexts $tail)
     ))
 )
+
+!(getPlanetFromContexts ((PLANET A) (HAS METAL STV)))
 
 (= (isValidRule $contexts $money $rule) (
     let* (
@@ -56,18 +134,24 @@
     ))
 )))
 
-(= (getApplicableRules $contexts $money $rules) (
-    if (== () $rules)
-        ()
-        (let* (
-            (($head $tail) (decons-atom $rules))
-            ($isValid (isValidRule $contexts $money $head))
-            ($rest (getApplicableRules $contexts $money $tail))
-        ) (if $isValid
-            (cons-atom $head $rest)
-            $rest
-        ))
-))
+(= (Rule22) (: Rule 22
+            (TTV 0)
+            (STV 0.5 0.002)
+            (Complexity 1)
+            (IMPLICATION
+                (AND
+                    (Context (STV 0.2 0.1) (AND (
+                        (PLANET A (STV 0.2 0.1))
+                    )))
+                    (Action (SEQ_AND (BUY FUEL)))
+                )
+                (Goal (STV 0.2 0.1) (AND (
+                    (PLANET A (STV 0.2 0.1))
+                    (HAS FUEL (STV 0.1 0.1))
+                )))
+        )))
+
+!(isValidRule ((PLANET A)) 24 (Rule22))
 
 (= (updatePlanet $contexts $planet) (
     if (== $contexts ())
@@ -83,17 +167,7 @@
         )))
 )
 
-(= (applyTravel $rule $contexts $money) (
-    let* (
-        ($ruleContext (extractRule ContextValues $rule))
-        ($ruleGoal (extractRule GoalValues $rule))
-        ($source (getPlanetFromContexts $ruleContext))
-        ($destination (getPlanetFromContexts $ruleGoal))
-        ($cost (getTravelCost $source $destination))
-        ($newContext (updatePlanet $contexts $destination)) ;; TODO
-        ($newMoney (- $money $cost))
-    ) ($newContext $newMoney)
-))
+!(updatePlanet ((PLANET A) (HAS FOOD)) B)
 
 (= (removeItem $contexts $item) (
     if (== $contexts ())
@@ -109,13 +183,7 @@
         ))
 ))
 
-(= (applySell $rule $contexts $money) (
-    let* (
-        ($item (getItem $contexts))
-        ($newContext (removeItem $contexts $item))
-        ($newMoney (+ $money (getItemPrice $item)))
-    ) ($newContext $newMoney)
-))
+!(removeItem ((PLANET A) (HAS FOOD) (HAS FUEL)) FOOD)
 
 (= (addItem $contexts $item) (
     if (== $contexts ())
@@ -131,44 +199,4 @@
         ))
 ))
 
-(= (applyBuy $rule $contexts $money) (
-    let* (
-        ($ruleGoal (extractRule GoalValues $rule))
-        ($item (getItem $ruleGoal))
-        ($planet (getPlanetFromContexts $ruleGoal))
-        ($itemPrice (getItemPrice $item $planet))
-        ($newContext (addItem $contexts $item))
-        ($newMoney (- $money $itemPrice))
-    ) ($newContext $newMoney)
-))
-
-(= (applyRule $rule $contexts $money) (
-    let* (
-        ($ruleActions (extractRule Actions $rule))
-        ($ruleAction (index-atom $ruleActions 0))
-    ) (case $ruleAction (
-        (TRAVEL (applyTravel $rule $contexts $money))
-        (SELL (applySell $rule $contexts $money))
-        (BUY (applyBuy $rule $contexts $money))
-    ))
-))
-
-(= (getItem $contexts) (
-    if (== $contexts ())
-        ()
-        (let* (
-            (($head $tail) (decons-atom $contexts))
-            ($contextType (index-atom $head 0))
-            ($itemName (index-atom $head 1))
-        ) (if (== $contextType HAS)
-            $itemName
-            (getItem $tail)
-        ))
-))
-
-(= (evaluateState $contexts $money) (
-    let* (
-        ($item (getItem $contexts))
-        ($itemValue (getAvgPrice $item))
-    ) (+ $itemValue $money)
-))
+!(addItem ((PLANET A) (HAS FOOD)) FUEL)

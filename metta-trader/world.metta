@@ -7,17 +7,17 @@
 (TRAVEL_COST C B 1)
 
 
-(FOOD_COST A 8)
-(FOOD_COST B 20)
-(FOOD_COST C 18)
+(FOOD A 8)
+(FOOD B 20)
+(FOOD C 18)
 
-(METAL_COST A 15)
-(METAL_COST B 8)
-(METAL_COST C 22)
+(METAL A 15)
+(METAL B 8)
+(METAL C 22)
 
-(FUEL_COST A 25)
-(FUEL_COST B 18)
-(FUEL_COST C 5)
+(FUEL A 25)
+(FUEL B 18)
+(FUEL C 5)
 
 (AVG_PRICE FOOD 15)
 (AVG_PRICE METAL 15)
@@ -29,15 +29,19 @@
 ))
 
 (= (getFoodCost $planet) (
-    match &self (FOOD_COST $planet $cost) $cost
+    match &self (FOOD $planet $cost) $cost
 ))
 
 (= (getMetalCost $planet) (
-    match &self (METAL_COST $planet $cost) $cost
+    match &self (METAL $planet $cost) $cost
 ))
 
 (= (getFuelCost $planet) (
-    match &self (FUEL_COST $planet $cost) $cost
+    match &self (FUEL $planet $cost) $cost
+))
+
+(= (getItemPrice $item $planet) (
+    match &self ($item $planet $price) $price
 ))
 
 (= (getAvgPrice $item) (
