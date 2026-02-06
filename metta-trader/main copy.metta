@@ -4,7 +4,7 @@
 !(import! &self world)
 !(import! &self planner)
 !(import! &self schemas)
-!(import! &self petta-trader:pln:engine)
+!(import! &self metta-trader:pln:engine)
 
 (= (loop $contexts $money $ruleSpace) (
     let* (
