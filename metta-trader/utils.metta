@@ -200,5 +200,5 @@
 ))
 
 ;; Update Atoms in a space
-(: updateAtom (-> Grounded Atom Atom (->)))
+; (: updateAtom (-> Grounded Atom Atom (->)))
 (= (updateAtom $oatom $natom $space) (let $_ (remove-atom $space $oatom) (add-atom $space $natom)))

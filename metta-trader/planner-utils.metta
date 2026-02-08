@@ -1,19 +1,19 @@
 ;; Utility functions for Thompson Sampling based action planner
 
 ;; Convert confidence to count
-(: confidenceToCount (-> Number Number))
+; (: confidenceToCount (-> Number Number))
 (= (confidenceToCount $confidence) (
     / (* $confidence 800) (- 1 $confidence)
 ))
 
 ;; Convert count to confidence
-(: countToConfindence (-> Number Number))
+; (: countToConfindence (-> Number Number))
 (= (countToConfindence $count) (
     / $count (+ 800 $count)
 ))
 
 ;; Convert strength and confidence to alpha and beta parameters of Beta distribution
-(: stvToBeta (-> (Number Number) (Number Number)))
+; (: stvToBeta (-> (Number Number) (Number Number)))
 (= (stvToBeta ($strength $confidence)) (
     let* (
         ($count (confidenceToCount $confidence))
@@ -23,7 +23,7 @@
 ))
 
 ;; Convert alpha and beta parameters of Beta distribution to strength and confidence
-(: betaToSTV (-> (Number Number) (Number Number)))
+; (: betaToSTV (-> (Number Number) (Number Number)))
 (= (betaToSTV ($alpha $beta)) (
     let* (
         ($count (+ $alpha $beta))
@@ -33,49 +33,49 @@
 ))
 
 ;; Math utilities for Metta
-(: isBetween (-> Number Number Number Bool))
+; (: isBetween (-> Number Number Number Bool))
 (= (isBetween $val $low $high) (and (>= $val $low) (<= $val $high)))
 
-(: max (-> Number Number Number))
+; (: max (-> Number Number Number))
 (= (max $x $y) (if (> $x $y) $x $y))
 
-(: min (-> Number Number Number))
+; (: min (-> Number Number Number))
 (= (min $x $y) (if (> $x $y) $y $x))
 
-(: round (-> Number Number Number))
+; (: round (-> Number Number Number))
 (= (round $num $sig) ((py-atom round) $num $sig))
 
-(: getRandomInt (-> Number Number Number))
+; (: getRandomInt (-> Number Number Number))
 (= (getRandomInt $min $max) (
     (py-atom random.randint) $min $max
 ))
 
-(: getRandom (-> Number))
+; (: getRandom (-> Number))
 (= (getRandom) (
     (py-atom random.random)
 ))
 
-(: log (-> Number Number))
+; (: log (-> Number Number))
 (= (log $value) (
     (py-atom math.log) $value
 ))
 
-(: sqrt (-> Number Number))
+; (: sqrt (-> Number Number))
 (= (sqrt $num) (
     (py-atom math.sqrt) $num
 ))
 
-(: exp (-> Number Number))
+; (: exp (-> Number Number))
 (= (exp $num) (
     (py-atom math.exp) $num
 ))
 
-(: div (-> Number Number Number))
+; (: div (-> Number Number Number))
 (= (div $num $denom) (
     (py-atom operator.truediv) $num $denom
 ))
 
-(: sampleEngine (-> Number Number Number Number Number Number))
+; (: sampleEngine (-> Number Number Number Number Number Number))
 (= (sampleEngine $alpha $beta $a $b $gamma) (
     let* (
         ($u1 (getRandom))
@@ -91,7 +91,7 @@
     )
 ))
 
-(: betaSample (-> Number Number Number))
+; (: betaSample (-> Number Number Number))
 (= (betaSample $a $b) (
     let* (
         ($alpha (+ $a $b))
